@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+
+    const renderItems = (data) => {
+        for (const [key, value] of Object.entries(data)) {
+            if (typeof value === 'object') {
+                renderItems(value);
+            } else {
+                const item = document.createElement('div');
+                item.innerText = `${key}: ${value}`;
+                document.body.appendChild(item);
+            }
+        }
+    }
+    let url = new URL(location.href);
+    let json = url.searchParams.get('data');
+    let user = JSON.parse(json);
+
+    renderItems(user);
+
+    let a = document.createElement('button');
+    a.innerText = `Post of current`;
+    a.onclick = () => {
+
+        fetch(`https://jsonplaceholder.typicode.com/users/${user.id}/posts`)
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                const item = document.createElement('div')
+                item.innerText = 'Posts: ';
+                document.body.appendChild(item);
+                for (const datum of data) {
+                    const item = document.createElement('a');
+                    item.style.display = 'block';
+                    item.href = `post-details.html?data=${JSON.stringify(datum)}`
+                    item.innerText = datum.title;
+                    document.body.appendChild(item);
+                }
+
+                a.style.display = 'none';
+            })
+    }
+
+    document.body.appendChild(a);
+
+</script>
+
+</body>
+</html>
