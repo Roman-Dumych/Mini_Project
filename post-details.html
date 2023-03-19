@@ -3,19 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        div {
+            background: silver;
+        }
+
+        .info {
+            width: 100%;
+            text-align: center;
+        }
+        .wrapper {
+            border: 1px solid black;
+            padding: 10px 20px;
+        }
+
+        .comment {
+            box-sizing: border-box;
+            width: 22%;
+            margin: 10px auto;
+        }
+    </style>
 </head>
 <body>
 
 <script>
 
-    const renderItems = (data) => {
+    const renderItems = (data, className) => {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('wrapper');
+
+        if (className) {
+            wrapper.classList.add(className);
+        }
+
         for (const [key, value] of Object.entries(data)) {
             if (typeof value === 'object') {
-                renderItems(value);
+                renderItems(value, className);
             } else {
                 const item = document.createElement('div');
                 item.innerText = `${key}: ${value}`;
-                document.body.appendChild(item);
+                wrapper.appendChild(item);
+                document.body.appendChild(wrapper);
             }
         }
     }
@@ -24,11 +59,11 @@
     let json = url.searchParams.get('data');
     let post = JSON.parse(json);
 
-    renderItems(post);
+    renderItems(post, 'info');
 
     fetch(`https://jsonplaceholder.typicode.com/posts/${post.id}/comments`)
         .then(response => response.json())
-        .then(data => renderItems(data));
+        .then(data => renderItems(data, 'comment'));
 
 </script>
 

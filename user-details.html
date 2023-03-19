@@ -3,6 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+
+    <style>
+        button {
+            width: 90%;
+            display: block;
+            margin: 0 auto;
+            margin-top: 50px;
+        }
+        .title{
+            border: 1px solid black;
+            width: 50%;
+            box-sizing: border-box;
+            display: inline-block;
+            padding: 10px 20px;
+        }
+    </style>
 </head>
 <body>
 
@@ -26,7 +42,7 @@
     renderItems(user);
 
     let a = document.createElement('button');
-    a.innerText = `Post of current`;
+    a.innerText = `Post of current user`;
     a.onclick = () => {
 
         fetch(`https://jsonplaceholder.typicode.com/users/${user.id}/posts`)
@@ -39,10 +55,13 @@
                 document.body.appendChild(item);
                 for (const datum of data) {
                     const item = document.createElement('a');
+                    const wrapper = document.createElement('div');
+                    wrapper.appendChild(item);
+                    wrapper.className = 'title';
                     item.style.display = 'block';
                     item.href = `post-details.html?data=${JSON.stringify(datum)}`
                     item.innerText = datum.title;
-                    document.body.appendChild(item);
+                    document.body.appendChild(wrapper);
                 }
 
                 a.style.display = 'none';
